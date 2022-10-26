@@ -1,0 +1,1 @@
+export { WithApollo } from './ApolloClient';

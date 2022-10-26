@@ -1,0 +1,1 @@
+directive @validateEmail on FIELD_DEFINITION

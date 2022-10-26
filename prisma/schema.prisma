@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SYSTEM_ADMIN
+}
+
+model SystemConfig {
+  id        String  @id @default(cuid())
+  setupMode Boolean @default(true)
+}
+
+model User {
+  id                  String  @id @default(cuid())
+  email               String                @unique
+  name                String?
+  password            String
+  verified      Boolean         @default(false)
+  ownedProjects       Project[]             @relation(name: "Owner")
+  projectUserRelation ProjectUserRelation[] @relation("ProjectMember")
+  magicLink           MagicLink?
+}
+
+model MagicLink {
+  id        String  @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String      @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  publicKey String   @unique
+}
+
+model Project {
+  id                  String  @id @default(cuid())
+  name                String
+  owner               User?                 @relation(name: "Owner", fields: [ownerId], references: [id])
+  ownerId             String
+  projectUserRelation ProjectUserRelation[] @relation("MemberProject")
+}
+
+model ProjectUserRelation {
+  user       User     @relation("ProjectMember", fields: [userId], references: [id])
+  userId     String
+  project    Project  @relation("MemberProject", fields: [projectId], references: [id])
+  projectId  String
+  assignedAt DateTime @default(now())
+  assignById String
+
+  @@id([userId, projectId])
+}

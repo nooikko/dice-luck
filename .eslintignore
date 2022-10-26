@@ -1,0 +1,15 @@
+.prettierrc.js
+next.config.js
+*.css
+styles
+node_modules
+*.json
+*.gql
+*.toml
+*.sql
+*.yml
+*.md
+*.prisma
+*.ico
+*.svg
+*.png

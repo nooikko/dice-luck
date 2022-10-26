@@ -1,0 +1,6 @@
+type Mutation {
+  loginJwt(email: String!, password: String!): String! @validateEmail
+  loginMagic(email: String!): Boolean! @validateEmail
+  resendMagic(email: String!): Boolean! @validateEmail
+  validateMagic(slug: String!): String!
+}

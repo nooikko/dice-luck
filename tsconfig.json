@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "typeRoots": ["node_modules/@types", "$types"],
+    "baseUrl": "./",
+    "paths": {
+      "$graphql-directives": ["pages/api/graphql/directives"],
+      "$graphql-schema": ["pages/api/graphql/schemas"],
+      "$prisma": ["prisma"],
+      "$types": ["$types"],
+      "$helpers-server": ["helpers/server"],
+      "$helpers-client": ["helpers/client"],
+      "$components": ["components"],
+      "$system-components": ["components/SystemComponents"],
+      "$constants": ["constants"],
+      "$public/*": ["public/*"],
+
+    },
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/graphql/schemas/User/query.resolver.ts_"],
+  "exclude": ["node_modules"]
+}

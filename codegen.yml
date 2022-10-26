@@ -1,0 +1,8 @@
+schema: http://localhost:3000/api/graphql
+generates:
+  ./$types/graphql-types.ts:
+    plugins:
+      - typescript
+  # ./pages/api/graphql/merged-schema.graphql:
+  #   plugins:
+  #     - schema-ast
