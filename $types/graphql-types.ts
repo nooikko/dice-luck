@@ -157,6 +157,7 @@ export type Query = {
   getCharacters: Array<Maybe<Character>>;
   getClass?: Maybe<Class>;
   getClassLevel?: Maybe<ClassLevel>;
+  getClasses: Array<Class>;
   getProject?: Maybe<Project>;
   getRoll?: Maybe<Roll>;
   getRollsByCharacter: Array<Maybe<Roll>>;

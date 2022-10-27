@@ -14,6 +14,7 @@ type Class {
 
 type Query {
   getClass(id: String!): Class  @authentication
+  getClasses: [Class!]!  @authentication
 }
 
 type Mutation {
