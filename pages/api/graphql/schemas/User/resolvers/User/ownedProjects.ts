@@ -1,5 +1,5 @@
-import { ResolverFn, QueryUserArgs } from '$types';
-import { Project } from '@prisma/client';
+import { QueryGetUserArgs, ResolverFnWithParent } from '$types';
+import { Project, User } from '@prisma/client';
 import { logger } from '$helpers-server';
 import { ApolloError } from 'apollo-server-micro';
 
@@ -10,7 +10,7 @@ import { ApolloError } from 'apollo-server-micro';
  * @param param2 The context passed to the resolver
  * @returns The projects owned by the user
  */
-export const ownedProjects: ResolverFn<QueryUserArgs, Promise<Project[]>> = async ({ id }, __, { prisma }) => {
+export const ownedProjects: ResolverFnWithParent<User, QueryGetUserArgs, Promise<Project[]>> = async ({ id }, __, { prisma }) => {
   try {
     const projects = await prisma.project.findMany({
       where: {
@@ -21,6 +21,6 @@ export const ownedProjects: ResolverFn<QueryUserArgs, Promise<Project[]>> = asyn
     return projects;
   } catch (error) {
     logger.error('ownedProjects', error);
-    throw new ApolloError('An error occurred getting owned projects');
+    throw new ApolloError(`An error occurred getting projects owned by user with id ${id}`);
   }
 };
