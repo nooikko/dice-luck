@@ -26,17 +26,21 @@ export const createApolloServer = async () => {
         },
       };
 
-      if (Object.keys(req.headers).includes('authorization')) {
-        const [, token] = req.headers.authorization.split(' ');
+      try {
+        if (Object.keys(req.headers).includes('authorization')) {
+          const [, token] = req.headers.authorization.split(' ');
 
-        const unpackedToken = validateJwt(token);
+          const unpackedToken = validateJwt(token);
 
-        if (unpackedToken) {
-          output.unpackedToken = unpackedToken;
+          if (unpackedToken) {
+            output.unpackedToken = unpackedToken;
+          }
         }
-      }
 
-      return output;
+        return output;
+      } catch (error) {
+        return output;
+      }
     },
   });
 
