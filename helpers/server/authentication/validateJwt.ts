@@ -15,6 +15,8 @@ export const validateJwt = (token: string) => {
 
     const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
+    data['validated'] = true;
+
     return data as TokenData;
   } catch (error) {
     logger.error('validateJwt', error);

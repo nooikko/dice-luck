@@ -1,24 +1,23 @@
-import { ApolloServer } from 'apollo-server-micro';
-import cookie from 'cookie';
+// @ts-nocheck
+import { applyDirectives, directiveTypeDefs } from '$graphql-directives';
 import { resolvers, typeDefs } from '$graphql-schema';
-import { prisma } from '$prisma';
 import { validateJwt } from '$helpers-server';
+import { prisma } from '$prisma';
 import { Context } from '$types';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { applyDirectives, directiveTypeDefs } from '$graphql-directives';
+import { ApolloServer } from 'apollo-server-micro';
 
 export const createApolloServer = async () => {
   const apolloServer = new ApolloServer({
     schema: await applyDirectives(
       makeExecutableSchema({
-        resolvers,
+        resolvers: await resolvers,
         typeDefs: [typeDefs, directiveTypeDefs],
       }),
     ),
     context: async ({ req }): Promise<Context> => {
       const output: Context = {
         prisma,
-        cookies: {},
         unpackedToken: {
           email: '',
           id: '',
@@ -27,14 +26,14 @@ export const createApolloServer = async () => {
         },
       };
 
-      if (!req?.headers?.cookie) {
-        return output;
-      }
+      if (Object.keys(req.headers).includes('authorization')) {
+        const [, token] = req.headers.authorization.split(' ');
 
-      output.cookies = cookie.parse(req?.headers?.cookie);
+        const unpackedToken = validateJwt(token);
 
-      if (output.cookies?.user) {
-        output.unpackedToken = validateJwt(output.cookies.user);
+        if (unpackedToken) {
+          output.unpackedToken = unpackedToken;
+        }
       }
 
       return output;
