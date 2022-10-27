@@ -1,0 +1,30 @@
+input CreateCharacterInput {
+  name: String!
+  projectId: String!
+}
+
+type Character {
+  id: String!
+  name: String!
+  # TODO: Connect to ClassLevels
+  classLevels: [ClassLevel]!
+  # TODO: Connect to Project
+  project: Project!
+  # TODO: Connect to User
+  user: User!
+  # TODO: Connect to Roll
+  rolls: [Roll]!
+  # TODO: Create Datetime type
+  # createdAt:
+  # updatedAt:
+}
+
+type Query {
+  getCharacter(id: String!): Character  @authentication
+  getCharacters: [Character]!  @authentication
+}
+
+type Mutation {
+  createCharacter(input: CreateCharacterInput): Character! @authentication
+  deleteCharacter(id: String!): Boolean!  @authentication
+}

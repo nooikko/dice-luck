@@ -1,33 +1,42 @@
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge';
 
-const getResolvers = () => {
+const extractNames = (path: string) => {
+  const [strippedPath] = path.split('.ts');
+  const [, , , , , , folderName, fileName] = strippedPath.split('/');
+  return {
+    folderName,
+    fileName,
+  };
+};
+
+const getResolvers = async () => {
   const context = require.context(__dirname, true, /pages\/api\/graphql\/schemas\/.+\/resolvers\/.+\/.+.ts/);
   const filenames = context.keys();
-  const resolverAggregate = filenames.reduce((acc, cur) => {
-    const [, , , , , , resolverName] = cur.split('/');
-    const modules = context(cur);
-    const resolvers = Object.keys(modules).reduce((acc, cur) => {
-      acc[cur] = modules[cur];
 
-      return acc;
-    }, {});
+  const models = filenames.reduce((acc, cur) => {
+    const { folderName } = extractNames(cur);
 
-    if (!Object.keys(acc).includes(resolverName)) {
-      acc[resolverName] = {
-        ...resolvers,
+    if (!Object.keys(acc).includes(folderName)) {
+      acc[folderName] = {};
+    } else {
+      acc[folderName] = {
+        ...acc[folderName],
       };
-      return acc;
     }
-
-    acc[resolverName] = {
-      ...acc[resolverName],
-      ...resolvers,
-    };
-
     return acc;
   }, {} as any);
 
-  return mergeResolvers(resolverAggregate);
+  for (const path of filenames) {
+    const { folderName, fileName } = extractNames(path);
+    const modules = await context(path);
+
+    models[folderName] = {
+      ...models[folderName],
+      [fileName]: modules[fileName],
+    };
+  }
+
+  return mergeResolvers(models);
 };
 
 const getTypeDefs = () => {

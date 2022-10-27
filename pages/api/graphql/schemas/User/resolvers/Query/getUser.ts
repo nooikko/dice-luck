@@ -1,5 +1,5 @@
 import { logger } from '$helpers-client';
-import { QueryUserArgs, ResolverFn } from '$types';
+import { ResolverFn } from '$types';
 import { User } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 
@@ -10,8 +10,7 @@ import { ApolloError } from 'apollo-server-micro';
  * @param param2 The context passed to the resolver
  * @returns The user
  */
-export const getUser: ResolverFn<QueryUserArgs, Promise<User>> = async (_, { id }, { prisma }) => {
-  // Wrap the prisma call in a try/catch block
+export const getUser: ResolverFn<never, Promise<User>> = async (_, __, { prisma, unpackedToken: { id } }) => {
   try {
     const user = await prisma.user.findUnique({
       where: {

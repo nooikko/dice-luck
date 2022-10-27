@@ -1,0 +1,26 @@
+input CreateRollInput {
+  sides: Int!
+}
+
+type Roll {
+  id: String!
+  sides: Int!
+  result: Int!
+  advantage: Boolean!
+  disadvantag: Boolean!
+  inspiration: Boolean!
+  modifier: Int!
+  user: User!
+  character: Character!
+}
+
+type Query {
+  getRoll(id: String!): Roll  @authentication
+  getRollsByUser: [Roll]!  @authentication
+  getRollsByCharacter(characterId: String!): [Roll]!  @authentication
+}
+
+type Mutation {
+  createRoll: Project! @authentication
+  deleteProject(id: String!): Boolean!  @authentication
+}
