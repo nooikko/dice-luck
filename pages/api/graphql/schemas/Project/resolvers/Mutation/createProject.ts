@@ -3,15 +3,14 @@ import { CreateProject, ResolverFn } from '$types';
 import { Project } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 
-export const createProject: ResolverFn<{ project: CreateProject }, Promise<Project>> = async (_, { project }, { prisma }) => {
+export const createProject: ResolverFn<{ project: CreateProject }, Promise<Project>> = async (_, { project }, { prisma, unpackedToken }) => {
   try {
-    // TODO: This needs the ownerId field, we need to get it from context
-    // TODO: Create helper to obfusacte user exists checking
     const newProject = await prisma.project.create({
       data: {
         name: project.name,
-        ownerId: 'example',
+        ownerId: unpackedToken.id,
         projectUserRelation: {
+          // TODO: Maybe switch this to an invite system
           create: project?.userIds?.map((userId) => {
             return {
               user: {
@@ -19,8 +18,7 @@ export const createProject: ResolverFn<{ project: CreateProject }, Promise<Proje
                   id: userId,
                 },
               },
-              assignedAt: new Date(),
-              assignById: 'testcase',
+              assignById: unpackedToken.id,
             };
           }),
         },
