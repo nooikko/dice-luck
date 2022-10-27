@@ -10,8 +10,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  SYSTEM_ADMIN
+enum Plan {
+  FREE
+  PRO
+  FOREVER_DM
 }
 
 model SystemConfig {
@@ -20,31 +22,39 @@ model SystemConfig {
 }
 
 model User {
-  id                  String  @id @default(cuid())
+  id                  String                @id @default(cuid())
   email               String                @unique
   name                String?
   password            String
-  verified      Boolean         @default(false)
+  verified            Boolean               @default(false)
   ownedProjects       Project[]             @relation(name: "Owner")
   projectUserRelation ProjectUserRelation[] @relation("ProjectMember")
   magicLink           MagicLink?
+  rolls               Roll[]
+  characters          Character[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 }
 
 model MagicLink {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   user      User     @relation(fields: [userId], references: [id])
-  userId    String      @unique
+  userId    String   @unique
   slug      String   @unique
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   publicKey String   @unique
 }
 
 model Project {
-  id                  String  @id @default(cuid())
+  id                  String                @id @default(cuid())
   name                String
   owner               User?                 @relation(name: "Owner", fields: [ownerId], references: [id])
   ownerId             String
   projectUserRelation ProjectUserRelation[] @relation("MemberProject")
+  character           Character[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 }
 
 model ProjectUserRelation {
@@ -54,6 +64,54 @@ model ProjectUserRelation {
   projectId  String
   assignedAt DateTime @default(now())
   assignById String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@id([userId, projectId])
+}
+
+model Class {
+  id          String        @id @default(cuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  subclasses  String[]
+  ClassLevels ClassLevel[]
+}
+
+model ClassLevel {
+  id          String    @id @default(cuid())
+  class       Class     @relation(fields: [classId], references: [id])
+  classId     String
+  character   Character @relation(fields: [characterId], references: [id])
+  characterId String
+}
+
+model Character {
+  id          String        @id @default(cuid())
+  name        String
+  classLevels ClassLevel[]
+  projectId   String
+  project     Project       @relation(fields: [projectId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  userId      String
+  rolls       Roll[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Roll {
+  id           String    @id @default(cuid())
+  sides        Int
+  result       Int
+  advantage    Boolean   @default(false)
+  disadvantage Boolean   @default(false)
+  inspiration  Boolean   @default(false)
+  modifier     Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id])
+  userId       String
+  characterId  String
+  character    Character @relation(fields: [characterId], references: [id])
 }
