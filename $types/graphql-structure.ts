@@ -11,10 +11,8 @@ export interface TokenData {
 
 export interface Context {
   prisma: PrismaClient;
-  cookies: {
-    [key: string]: string;
-  };
   unpackedToken: TokenData;
 }
 
 export type ResolverFn<Args, Output> = (parent: any, args: Args, ctx: Context) => Output;
+export type ResolverFnWithParent<Parent, Args, Output> = (parent: Parent, args: Args, ctx: Context) => Output;
