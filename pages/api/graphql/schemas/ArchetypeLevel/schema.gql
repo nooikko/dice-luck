@@ -1,0 +1,23 @@
+input CreateArchetypeLevelInput {
+  archetype: Archetype!
+  characterId: String!
+  level: Int!
+}
+
+type ArchetypeLevel {
+  id: String!
+  archetype: Archetype!
+  character: Character!
+  # TODO: Create Datetime type
+  # createdAt:
+  # updatedAt:
+}
+
+type Query {
+  getArchetypeLevel(id: String!): ArchetypeLevel @authentication
+}
+
+type Mutation {
+  createArchetypeLevel(input: CreateArchetypeLevelInput!): ArchetypeLevel @authentication
+  deleteArchetypeLevel(id: String!): Boolean @authentication
+}

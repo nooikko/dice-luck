@@ -12,9 +12,33 @@ export type Scalars = {
   Float: number;
 };
 
+export enum Archetype {
+  Artificer = 'ARTIFICER',
+  Barbarian = 'BARBARIAN',
+  Bard = 'BARD',
+  BloodHunter = 'BLOOD_HUNTER',
+  Cleric = 'CLERIC',
+  Druid = 'DRUID',
+  Fighter = 'FIGHTER',
+  Monk = 'MONK',
+  Paladin = 'PALADIN',
+  Ranger = 'RANGER',
+  Rogue = 'ROGUE',
+  Sorcerer = 'SORCERER',
+  Warlock = 'WARLOCK',
+  Wizard = 'WIZARD',
+}
+
+export type ArchetypeLevel = {
+  __typename?: 'ArchetypeLevel';
+  archetype: Archetype;
+  character: Character;
+  id: Scalars['String'];
+};
+
 export type Character = {
   __typename?: 'Character';
-  classLevels: Array<Maybe<ClassLevel>>;
+  archetypeLevel: Array<Maybe<ArchetypeLevel>>;
   id: Scalars['String'];
   name: Scalars['String'];
   project: Project;
@@ -22,34 +46,15 @@ export type Character = {
   user: User;
 };
 
-export type Class = {
-  __typename?: 'Class';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  subclasses: Array<Scalars['String']>;
-};
-
-export type ClassLevel = {
-  __typename?: 'ClassLevel';
-  character: Character;
-  class: Class;
-  id: Scalars['String'];
+export type CreateArchetypeLevelInput = {
+  archetype: Archetype;
+  characterId: Scalars['String'];
+  level: Scalars['Int'];
 };
 
 export type CreateCharacterInput = {
   name: Scalars['String'];
   projectId: Scalars['String'];
-};
-
-export type CreateClassInput = {
-  name: Scalars['String'];
-  subclasses: Array<Scalars['String']>;
-};
-
-export type CreateClassLevelInput = {
-  characterId: Scalars['String'];
-  classId: Scalars['String'];
-  name: Scalars['String'];
 };
 
 export type CreateProject = {
@@ -69,15 +74,13 @@ export type CreateUser = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createArchetypeLevel?: Maybe<ArchetypeLevel>;
   createCharacter: Character;
-  createClass?: Maybe<Class>;
-  createClassLevel?: Maybe<ClassLevel>;
   createProject: Project;
   createRoll: Project;
   createUser: User;
+  deleteArchetypeLevel?: Maybe<Scalars['Boolean']>;
   deleteCharacter: Scalars['Boolean'];
-  deleteClass?: Maybe<Scalars['Boolean']>;
-  deleteClassLevel?: Maybe<Scalars['Boolean']>;
   deleteProject: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   loginJwt: Scalars['String'];
@@ -86,43 +89,31 @@ export type Mutation = {
   validateMagic: Scalars['String'];
 };
 
+export type MutationCreateArchetypeLevelArgs = {
+  input: CreateArchetypeLevelInput;
+};
+
 export type MutationCreateCharacterArgs = {
   input?: InputMaybe<CreateCharacterInput>;
 };
 
-export type MutationCreateClassArgs = {
-  input: CreateClassInput;
-};
-
-export type MutationCreateClassLevelArgs = {
-  input: CreateClassLevelInput;
-};
-
 export type MutationCreateProjectArgs = {
-  project: CreateProject;
+  input: CreateProject;
 };
 
 export type MutationCreateUserArgs = {
   user: CreateUser;
 };
 
+export type MutationDeleteArchetypeLevelArgs = {
+  id: Scalars['String'];
+};
+
 export type MutationDeleteCharacterArgs = {
   id: Scalars['String'];
 };
 
-export type MutationDeleteClassArgs = {
-  id: Scalars['String'];
-};
-
-export type MutationDeleteClassLevelArgs = {
-  id: Scalars['String'];
-};
-
 export type MutationDeleteProjectArgs = {
-  id: Scalars['String'];
-};
-
-export type MutationDeleteUserArgs = {
   id: Scalars['String'];
 };
 
@@ -153,11 +144,9 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query';
+  getArchetypeLevel?: Maybe<ArchetypeLevel>;
   getCharacter?: Maybe<Character>;
   getCharacters: Array<Maybe<Character>>;
-  getClass?: Maybe<Class>;
-  getClassLevel?: Maybe<ClassLevel>;
-  getClasses: Array<Class>;
   getProject?: Maybe<Project>;
   getRoll?: Maybe<Roll>;
   getRollsByCharacter: Array<Maybe<Roll>>;
@@ -166,15 +155,11 @@ export type Query = {
   getUsers: Array<Maybe<User>>;
 };
 
+export type QueryGetArchetypeLevelArgs = {
+  id: Scalars['String'];
+};
+
 export type QueryGetCharacterArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetClassArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryGetClassLevelArgs = {
   id: Scalars['String'];
 };
 

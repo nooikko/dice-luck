@@ -16,6 +16,23 @@ enum Plan {
   FOREVER_DM
 }
 
+enum Archetype {
+  BARBARIAN
+  BARD
+  CLERIC
+  DRUID
+  FIGHTER
+  MONK
+  PALADIN
+  RANGER
+  ROGUE
+  SORCERER
+  WARLOCK
+  WIZARD
+  ARTIFICER
+  BLOOD_HUNTER
+}
+
 model SystemConfig {
   id        String  @id @default(cuid())
   setupMode Boolean @default(true)
@@ -34,6 +51,8 @@ model User {
   characters          Character[]
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
+  archetypeLevel      ArchetypeLevel[]
+  projectAssignments  ProjectUserRelation[] @relation("AssignedBy")
 }
 
 model MagicLink {
@@ -58,46 +77,40 @@ model Project {
 }
 
 model ProjectUserRelation {
-  user       User     @relation("ProjectMember", fields: [userId], references: [id])
-  userId     String
-  project    Project  @relation("MemberProject", fields: [projectId], references: [id])
-  projectId  String
-  assignedAt DateTime @default(now())
-  assignById String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  user         User     @relation("ProjectMember", fields: [userId], references: [id])
+  userId       String
+  project      Project  @relation("MemberProject", fields: [projectId], references: [id])
+  projectId    String
+  assignedAt   DateTime @default(now())
+  assignedBy   User     @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedById String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@id([userId, projectId])
 }
 
-model Class {
-  id          String        @id @default(cuid())
-  name        String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  subclasses  String[]
-  ClassLevels ClassLevel[]
-}
-
-model ClassLevel {
+model ArchetypeLevel {
   id          String    @id @default(cuid())
-  class       Class     @relation(fields: [classId], references: [id])
-  classId     String
+  archetype   Archetype
   character   Character @relation(fields: [characterId], references: [id])
   characterId String
+  level       Int       @default(1)
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
 }
 
 model Character {
-  id          String        @id @default(cuid())
-  name        String
-  classLevels ClassLevel[]
-  projectId   String
-  project     Project       @relation(fields: [projectId], references: [id])
-  user        User          @relation(fields: [userId], references: [id])
-  userId      String
-  rolls       Roll[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id              String           @id @default(cuid())
+  name            String
+  archetypeLevels ArchetypeLevel[]
+  projectId       String
+  project         Project          @relation(fields: [projectId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+  userId          String
+  rolls           Roll[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Roll {

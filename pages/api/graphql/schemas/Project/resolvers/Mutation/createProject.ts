@@ -1,26 +1,37 @@
 import { logger } from '$helpers-server';
-import { CreateProject, ResolverFn } from '$types';
+import { MutationCreateProjectArgs, ResolverFn } from '$types';
 import { Project } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 
-export const createProject: ResolverFn<{ project: CreateProject }, Promise<Project>> = async (_, { project }, { prisma, unpackedToken }) => {
+export const createProject: ResolverFn<MutationCreateProjectArgs, Promise<Project>> = async (_, { input }, { prisma, unpackedToken: { id } }) => {
   try {
     const newProject = await prisma.project.create({
       data: {
-        name: project.name,
-        ownerId: unpackedToken.id,
-        projectUserRelation: {
-          // TODO: Maybe switch this to an invite system
-          create: project?.userIds?.map((userId) => {
-            return {
-              user: {
-                connect: {
-                  id: userId,
-                },
-              },
-              assignById: unpackedToken.id,
-            };
-          }),
+        ...input,
+        owner: {
+          connect: {
+            id,
+          },
+        },
+      },
+    });
+
+    await prisma.projectUserRelation.create({
+      data: {
+        assignedBy: {
+          connect: {
+            id,
+          },
+        },
+        project: {
+          connect: {
+            id: newProject.id,
+          },
+        },
+        user: {
+          connect: {
+            id,
+          },
         },
       },
     });
@@ -28,6 +39,6 @@ export const createProject: ResolverFn<{ project: CreateProject }, Promise<Proje
     return newProject;
   } catch (error) {
     logger.error('createProject', error);
-    throw new ApolloError('An error occurred while creating the project');
+    throw new ApolloError(`An error occurred creating project with name ${input.name}`);
   }
 };

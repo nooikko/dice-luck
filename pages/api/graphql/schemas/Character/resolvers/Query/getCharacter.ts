@@ -10,8 +10,20 @@ import { ApolloError } from 'apollo-server-micro';
  * @param param2 The context passed to the resolver
  * @returns The character
  */
-export const getCharacter: ResolverFn<QueryGetCharacterArgs, Promise<Character>> = async (_, { id }, { prisma }) => {
+export const getCharacter: ResolverFn<QueryGetCharacterArgs, Promise<Character>> = async (_, { id }, { prisma, unpackedToken }) => {
   try {
+    const userCharacters = await prisma.character.findMany({
+      where: {
+        userId: unpackedToken.id,
+      },
+    });
+
+    const characterIds = userCharacters.map((character) => character.id);
+
+    if (!characterIds.includes(id)) {
+      throw new ApolloError('You do not have permission to view this character');
+    }
+
     const character = await prisma.character.findUnique({
       where: {
         id,

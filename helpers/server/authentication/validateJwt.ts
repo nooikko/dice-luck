@@ -19,7 +19,7 @@ export const validateJwt = (token: string) => {
 
     return data as TokenData;
   } catch (error) {
-    logger.error('validateJwt', error);
+    logger.debug('validateJwt', error);
 
     // TODO: Handle fallout of finding that a token is expired
     if (error.message.includes('jwt expired')) {

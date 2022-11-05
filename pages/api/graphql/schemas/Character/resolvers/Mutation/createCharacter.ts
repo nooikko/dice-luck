@@ -3,11 +3,7 @@ import { MutationCreateCharacterArgs, ResolverFn } from '$types';
 import { Character } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 
-export const createCharacter: ResolverFn<MutationCreateCharacterArgs, Promise<Character>> = async (
-  _,
-  { input },
-  { prisma, unpackedToken: { id } },
-) => {
+export const createCharacter: ResolverFn<MutationCreateCharacterArgs, Promise<Character>> = async (_, { input }, { prisma, unpackedToken }) => {
   try {
     const { projectId, ...rest } = input;
     const newCharacter = await prisma.character.create({
@@ -15,7 +11,7 @@ export const createCharacter: ResolverFn<MutationCreateCharacterArgs, Promise<Ch
         ...rest,
         user: {
           connect: {
-            id,
+            id: unpackedToken.id,
           },
         },
         project: {

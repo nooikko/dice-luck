@@ -6,8 +6,8 @@ input CreateCharacterInput {
 type Character {
   id: String!
   name: String!
-  # TODO: Connect to ClassLevels
-  classLevels: [ClassLevel]!
+  # TODO: Connect to ArchetypeLevel
+  archetypeLevel: [ArchetypeLevel]!
   # TODO: Connect to Project
   project: Project!
   # TODO: Connect to User
