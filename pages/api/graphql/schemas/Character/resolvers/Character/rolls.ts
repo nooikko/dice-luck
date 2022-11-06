@@ -3,14 +3,15 @@ import { Character, ResolverFnWithParent } from '$types';
 import { Roll } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 
-// TODO: Update so this uses the natural roll resolver
 export const rolls: ResolverFnWithParent<Character, never, Promise<Roll[]>> = async ({ id }, __, { prisma }) => {
   try {
-    const rolls = await prisma.roll.findMany({
-      where: {
-        characterId: id,
-      },
-    });
+    const rolls = await prisma.character
+      .findUnique({
+        where: {
+          id,
+        },
+      })
+      .rolls();
 
     return rolls;
   } catch (error) {

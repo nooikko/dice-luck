@@ -1,40 +1,24 @@
-import { ResolverFn } from '$types';
-import { Project } from '@prisma/client';
-import { logger } from '$helpers-server';
+import { logger } from '$helpers-client';
+import { Project, ResolverFnWithParent } from '$types';
+import { User } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 
-// TODO: Refactor to more cleanly handle many-to-many relationships
-/**
- * Resolver for the projects query
- * @param param0 The parent resolver
- * @param __ The arguments passed to the resolver
- * @param param2 The context passed to the resolver
- * @returns The projects the user is a member of
- */
-export const projects: ResolverFn<null, Promise<Project[]>> = async ({ id }, __, { prisma }) => {
+export const projects: ResolverFnWithParent<User, never, Promise<Project[]>> = async ({ id }, __, { prisma }) => {
   try {
-    const relationships = await prisma.projectUserRelation.findMany({
+    const projectsByRelation = await prisma.projectUserRelation.findMany({
       where: {
         userId: id,
       },
-      include: {
-        project: {
-          select: {
-            id: true,
-            name: true,
-            ownerId: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
+      select: {
+        project: true,
       },
     });
 
-    const projects = relationships.map(({ project }) => project);
+    const projects = projectsByRelation.map(({ project }) => project);
 
-    return projects;
+    return projects as unknown as Project[];
   } catch (error) {
     logger.error('projects', error);
-    throw new ApolloError('An error occurred getting projects');
+    throw new ApolloError(`An error occurred getting projects for user with id ${id}`);
   }
 };

@@ -68,10 +68,10 @@ model MagicLink {
 model Project {
   id                  String                @id @default(cuid())
   name                String
-  owner               User?                 @relation(name: "Owner", fields: [ownerId], references: [id])
+  owner               User                  @relation(name: "Owner", fields: [ownerId], references: [id])
   ownerId             String
   projectUserRelation ProjectUserRelation[] @relation("MemberProject")
-  character           Character[]
+  characters           Character[]
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
 }

@@ -1,5 +1,6 @@
 input CreateProject {
   name: String!
+  # TODO: Update this to indicate people being invited
   userIds: [String!]
 }
 
@@ -8,6 +9,7 @@ type Project {
   name: String!
   owner: User!
   users: [User!]
+  characters: [Character!]
 }
 
 type Query {
@@ -15,6 +17,6 @@ type Query {
 }
 
 type Mutation {
-  createProject(input: CreateProject!): Project!
-  deleteProject(id: String!): Boolean!
+  createProject(input: CreateProject!): Project! @authentication
+  deleteProject(id: String!): Boolean! @authentication
 }

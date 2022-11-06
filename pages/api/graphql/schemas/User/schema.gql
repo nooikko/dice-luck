@@ -8,7 +8,6 @@ type User {
   id: String!
   email: String!
   name: String
-  password: String!
   ownedProjects: [Project!]!
   projects: [Project!]!
 }
@@ -16,6 +15,7 @@ type User {
 type Query {
   getUser(id: String!): User
   getUsers: [User]!
+  getMe: User @authentication
 }
 
 type Mutation {

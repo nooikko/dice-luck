@@ -38,7 +38,7 @@ export type ArchetypeLevel = {
 
 export type Character = {
   __typename?: 'Character';
-  archetypeLevel: Array<Maybe<ArchetypeLevel>>;
+  archetypeLevels: Array<Maybe<ArchetypeLevel>>;
   id: Scalars['String'];
   name: Scalars['String'];
   project: Project;
@@ -136,6 +136,7 @@ export type MutationValidateMagicArgs = {
 
 export type Project = {
   __typename?: 'Project';
+  characters?: Maybe<Array<Character>>;
   id: Scalars['String'];
   name: Scalars['String'];
   owner: User;
@@ -147,6 +148,7 @@ export type Query = {
   getArchetypeLevel?: Maybe<ArchetypeLevel>;
   getCharacter?: Maybe<Character>;
   getCharacters: Array<Maybe<Character>>;
+  getMe?: Maybe<User>;
   getProject?: Maybe<Project>;
   getRoll?: Maybe<Roll>;
   getRollsByCharacter: Array<Maybe<Roll>>;
@@ -198,6 +200,5 @@ export type User = {
   id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   ownedProjects: Array<Project>;
-  password: Scalars['String'];
   projects: Array<Project>;
 };
