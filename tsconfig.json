@@ -27,7 +27,6 @@
       "$system-components": ["components/SystemComponents"],
       "$constants": ["constants"],
       "$public/*": ["public/*"],
-
     },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/graphql/schemas/User/query.resolver.ts_"],
