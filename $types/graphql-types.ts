@@ -63,7 +63,18 @@ export type CreateProject = {
 };
 
 export type CreateRollInput = {
+  characterId: Scalars['String'];
+  hasAdvantage?: InputMaybe<Scalars['Boolean']>;
+  hasDisadvantage?: InputMaybe<Scalars['Boolean']>;
+  hasInpiration?: InputMaybe<Scalars['Boolean']>;
+  hasLucky?: InputMaybe<Scalars['Boolean']>;
+  isNormalRoll: Scalars['Boolean'];
+  modifier: Scalars['Int'];
+  parentId?: InputMaybe<Scalars['String']>;
+  result: Scalars['Int'];
   sides: Scalars['Int'];
+  type: RollType;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateUser = {
@@ -77,7 +88,7 @@ export type Mutation = {
   createArchetypeLevel?: Maybe<ArchetypeLevel>;
   createCharacter: Character;
   createProject: Project;
-  createRoll: Project;
+  createRoll: Roll;
   createUser: User;
   deleteArchetypeLevel?: Maybe<Scalars['Boolean']>;
   deleteCharacter: Scalars['Boolean'];
@@ -99,6 +110,10 @@ export type MutationCreateCharacterArgs = {
 
 export type MutationCreateProjectArgs = {
   input: CreateProject;
+};
+
+export type MutationCreateRollArgs = {
+  input?: InputMaybe<CreateRollInput>;
 };
 
 export type MutationCreateUserArgs = {
@@ -149,6 +164,7 @@ export type Query = {
   getCharacter?: Maybe<Character>;
   getCharacters: Array<Maybe<Character>>;
   getMe?: Maybe<User>;
+  getMyRolls: Array<Maybe<Roll>>;
   getProject?: Maybe<Project>;
   getRoll?: Maybe<Roll>;
   getRollsByCharacter: Array<Maybe<Roll>>;
@@ -174,7 +190,11 @@ export type QueryGetRollArgs = {
 };
 
 export type QueryGetRollsByCharacterArgs = {
-  characterId: Scalars['String'];
+  id: Scalars['String'];
+};
+
+export type QueryGetRollsByUserArgs = {
+  id: Scalars['String'];
 };
 
 export type QueryGetUserArgs = {
@@ -183,16 +203,36 @@ export type QueryGetUserArgs = {
 
 export type Roll = {
   __typename?: 'Roll';
-  advantage: Scalars['Boolean'];
   character: Character;
-  disadvantag: Scalars['Boolean'];
+  hasAdvantage: Scalars['Boolean'];
+  hasDisadvantage: Scalars['Boolean'];
+  hasInpiration: Scalars['Boolean'];
+  hasLucky: Scalars['Boolean'];
   id: Scalars['String'];
-  inspiration: Scalars['Boolean'];
   modifier: Scalars['Int'];
+  parent: RollParent;
   result: Scalars['Int'];
+  siblings: Array<Maybe<Roll>>;
   sides: Scalars['Int'];
   user: User;
 };
+
+export type RollParent = {
+  __typename?: 'RollParent';
+  character: Character;
+  id: Scalars['ID'];
+  result: Scalars['Int'];
+  rolls: Array<Maybe<Roll>>;
+  sides: Scalars['Int'];
+  type: RollType;
+  user: User;
+};
+
+export enum RollType {
+  Attack = 'ATTACK',
+  SavingThrow = 'SAVING_THROW',
+  SkillCheck = 'SKILL_CHECK',
+}
 
 export type User = {
   __typename?: 'User';

@@ -1,26 +1,60 @@
-input CreateRollInput {
-  sides: Int!
+enum RollType {
+  ATTACK
+  SAVING_THROW
+  SKILL_CHECK
 }
 
-type Roll {
-  id: String!
+input CreateRollInput {
+  type: RollType!
+  parentId: String
   sides: Int!
   result: Int!
-  advantage: Boolean!
-  disadvantag: Boolean!
-  inspiration: Boolean!
   modifier: Int!
+  isNormalRoll: Boolean!
+  hasAdvantage: Boolean
+  hasDisadvantage: Boolean
+  hasInpiration: Boolean
+  hasLucky: Boolean
+  userId: String
+  characterId: String!
+}
+
+type RollParent {
+  id: ID!
+  type: RollType!
+  sides: Int!
+  result: Int!
+  rolls: [Roll]!
+  # createdAt: DateTime!
+  # updatedAt: DateTime
   user: User!
   character: Character!
 }
 
+type Roll {
+  id: String!
+  parent: RollParent!
+  sides: Int!
+  result: Int!
+  modifier: Int!
+  hasAdvantage: Boolean!
+  hasDisadvantage: Boolean!
+  hasInpiration: Boolean!
+  hasLucky: Boolean!
+  user: User!
+  character: Character!
+  siblings: [Roll]!
+  # createdAt: DateTime!
+  # updatedAt: DateTime!
+}
+
 type Query {
   getRoll(id: String!): Roll  @authentication
-  getRollsByUser: [Roll]!  @authentication
-  getRollsByCharacter(characterId: String!): [Roll]!  @authentication
+  getMyRolls: [Roll]!  @authentication
+  getRollsByUser(id: String!): [Roll]!  @authentication
+  getRollsByCharacter(id: String!): [Roll]!  @authentication
 }
 
 type Mutation {
-  createRoll: Project! @authentication
-  deleteProject(id: String!): Boolean!  @authentication
+  createRoll(input: CreateRollInput): Roll! @authentication
 }
