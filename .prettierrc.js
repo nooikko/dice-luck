@@ -8,4 +8,5 @@ module.exports = {
   jsxSingleQuote: true,
   arrowParens: 'always',
   printWidth: 150,
+  tailwindConfig: './tailwind.config.js',
 };

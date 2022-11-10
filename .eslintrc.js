@@ -28,7 +28,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', '@typescript-eslint', 'prettier-plugin-tailwindcss'],
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'warn',

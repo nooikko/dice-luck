@@ -1,5 +1,8 @@
 module.exports = {
   reactStrictMode: true,
+  experimental: {
+    scrollRestoration: true,
+  },
   webpack: (config) => {
 
     config.module.rules.push({
