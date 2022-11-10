@@ -33,6 +33,12 @@ enum Archetype {
   BLOOD_HUNTER
 }
 
+enum RollType {
+  ATTACK
+  SAVING_THROW
+  SKILL_CHECK
+}
+
 model SystemConfig {
   id        String  @id @default(cuid())
   setupMode Boolean @default(true)
@@ -53,6 +59,7 @@ model User {
   updatedAt           DateTime              @updatedAt
   archetypeLevel      ArchetypeLevel[]
   projectAssignments  ProjectUserRelation[] @relation("AssignedBy")
+  RollParent          RollParent[]
 }
 
 model MagicLink {
@@ -71,9 +78,11 @@ model Project {
   owner               User                  @relation(name: "Owner", fields: [ownerId], references: [id])
   ownerId             String
   projectUserRelation ProjectUserRelation[] @relation("MemberProject")
-  characters           Character[]
+  characters          Character[]
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
+
+  @@index([ownerId])
 }
 
 model ProjectUserRelation {
@@ -98,6 +107,8 @@ model ArchetypeLevel {
   level       Int       @default(1)
   user        User      @relation(fields: [userId], references: [id])
   userId      String
+
+  @@index([userId])
 }
 
 model Character {
@@ -111,20 +122,45 @@ model Character {
   rolls           Roll[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  RollParent      RollParent[]
+
+  @@index([userId])
 }
 
 model Roll {
-  id           String    @id @default(cuid())
-  sides        Int
-  result       Int
-  advantage    Boolean   @default(false)
-  disadvantage Boolean   @default(false)
-  inspiration  Boolean   @default(false)
-  modifier     Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  user         User      @relation(fields: [userId], references: [id])
-  userId       String
-  characterId  String
-  character    Character @relation(fields: [characterId], references: [id])
+  id              String      @id @default(cuid())
+  hasAdvantage    Boolean     @default(false)
+  hasDisadvantage Boolean     @default(false)
+  hasInspiration  Boolean     @default(false)
+  hasLuck         Boolean     @default(false)
+  parentId        String?
+  parent          RollParent? @relation(fields: [parentId], references: [id])
+  accepted        Boolean     @default(false)
+  sides           Int
+  result          Int
+  modifier        Int         @default(0)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  character       Character?  @relation(fields: [characterId], references: [id])
+  characterId     String?
+
+  @@index([characterId, userId])
+}
+
+model RollParent {
+  id          String    @id @default(cuid())
+  type        RollType
+  sides       Int
+  result      Int?
+  rolls       Roll[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id])
+
+  @@index([characterId, userId])
 }
