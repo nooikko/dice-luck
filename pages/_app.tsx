@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 
-import { WithApollo } from '$components';
+import { WithApollo } from '$components/ApolloClient';
 
 function MyApp({ Component, pageProps }) {
   return (

@@ -1,8 +1,9 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx}'],
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
@@ -33,4 +34,4 @@ module.exports = {
     },
   },
   plugins: [require('@tailwindcss/forms')],
-}
+};
