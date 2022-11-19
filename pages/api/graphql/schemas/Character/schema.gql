@@ -10,9 +10,8 @@ type Character {
   project: Project!
   user: User!
   rolls: [Roll]!
-  # TODO: Create Datetime type
-  # createdAt:
-  # updatedAt:
+  createdAt: DateTime!
+  updatedAt: DateTime
 }
 
 type Query {

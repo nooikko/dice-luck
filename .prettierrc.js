@@ -9,4 +9,5 @@ module.exports = {
   arrowParens: 'always',
   printWidth: 150,
   tailwindConfig: './tailwind.config.js',
+  plugins: [require('prettier-plugin-tailwindcss')],
 };

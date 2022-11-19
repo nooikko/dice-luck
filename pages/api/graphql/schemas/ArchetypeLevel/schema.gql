@@ -8,9 +8,8 @@ type ArchetypeLevel {
   id: String!
   archetype: Archetype!
   character: Character!
-  # TODO: Create Datetime type
-  # createdAt:
-  # updatedAt:
+  createdAt: DateTime!
+  updatedAt: DateTime
 }
 
 type Query {

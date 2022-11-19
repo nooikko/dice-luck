@@ -10,6 +10,8 @@ type Project {
   owner: User!
   users: [User!]
   characters: [Character!]
+  createdAt: DateTime!
+  updatedAt: DateTime
 }
 
 type Query {

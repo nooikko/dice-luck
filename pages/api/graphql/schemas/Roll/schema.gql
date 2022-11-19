@@ -25,8 +25,8 @@ type RollParent {
   sides: Int!
   result: Int!
   rolls: [Roll]!
-  # createdAt: DateTime!
-  # updatedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime
   user: User!
   character: Character!
 }
@@ -44,8 +44,8 @@ type Roll {
   user: User!
   character: Character!
   siblings: [Roll]!
-  # createdAt: DateTime!
-  # updatedAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime
 }
 
 type Query {
