@@ -13,9 +13,7 @@ export const NavBar = () => {
         <nav className='relative z-50 flex justify-between'>
           <div className='flex items-center md:gap-x-12'>
             <Link passHref href='#' aria-label='Home'>
-              <a>
-                <Logo className='h-10 w-auto' />
-              </a>
+              <Logo className='h-10 w-auto' />
             </Link>
             <div className='hidden md:flex md:gap-x-6'>
               <NavLink href='#features'>Features</NavLink>

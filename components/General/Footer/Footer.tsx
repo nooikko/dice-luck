@@ -21,14 +21,10 @@ export function Footer() {
         <div className='flex flex-col items-center border-t border-slate-400/10 py-10 sm:flex-row-reverse sm:justify-between'>
           <div className='flex gap-x-6'>
             <Link passHref href='https://twitter.com' className='group' aria-label='TaxPal on Twitter'>
-              <a>
-                <AiFillTwitterSquare className='text-slate-400 group-hover:text-slate-500' />
-              </a>
+              <AiFillTwitterSquare className='text-slate-400 group-hover:text-slate-500' />
             </Link>
             <Link passHref href='https://github.com' className='group' aria-label='TaxPal on GitHub'>
-              <a>
-                <AiFillGithub className='h-6 w-6 fill-slate-500 group-hover:fill-slate-700' />
-              </a>
+              <AiFillGithub className='h-6 w-6 fill-slate-500 group-hover:fill-slate-700' />
             </Link>
           </div>
           <p className='mt-6 text-sm text-slate-500 sm:mt-0'>Copyright &copy; {new Date().getFullYear()} TaxPal. All rights reserved.</p>

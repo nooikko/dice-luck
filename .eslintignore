@@ -13,3 +13,5 @@ node_modules
 *.ico
 *.svg
 *.png
+*.jpg
+images
